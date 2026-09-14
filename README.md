@@ -14,7 +14,6 @@ e prática de consultas no schema de exemplo **HR**.
 ```
 .
 ├── LICENSE              # Licença MIT
-├── Fundamentos.sql      # Teoria: tipos de instruções SQL (DML, DDL, DCL, TCL)
 ├── CDB/
 │   └── criacao_pdbs.sql # Criação e administração dos PDBs (HR, SQLDB1)
 ├── HR/
@@ -22,7 +21,8 @@ e prática de consultas no schema de exemplo **HR**.
 │   ├── usuarios.sql     # Usuário PRODUTOS e verificações de privilégios
 │   └── Consultas.sql    # Prática de SELECT no schema HR
 └── SQLDB1/
-    └── usuarios.sql     # Usuários locais GESTOR (admin) e USR1 (aplicação)
+    ├── usuarios.sql     # Usuários locais GESTOR (admin) e USR1 (aplicação)
+    └── Fundamentos.sql  # Teoria: tipos de instruções SQL (DML, DDL, DCL, TCL)
 ```
 
 ### 🧱 Ambiente multitenant
@@ -36,7 +36,7 @@ CDB (FREE) ── CDB$ROOT ─┬─ PDB HR      → usuários HR, PRODUTOS   ·
 
 ## 📌 Conteúdo atual
 
-### `Fundamentos.sql`
+### `SQLDB1/Fundamentos.sql`
 Resumo teórico das sublinguagens do SQL:
 
 | Sigla | Nome | Comandos |

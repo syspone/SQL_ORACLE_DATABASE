@@ -1,7 +1,7 @@
 /* ============================================================
    Autor: Cristian Matias de Souza
    Empresa: ciruscom informatica
-   Arquivo:  Fundamentos.sql
+   Arquivo:  SQLDB1/Fundamentos.sql
    Criado:   11/09/2026 23:39
    Banco: SQLDB1
    Descrição: Fundamentos
