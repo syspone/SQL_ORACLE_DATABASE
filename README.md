@@ -12,6 +12,7 @@ sobre fundamentos da linguagem e prática de consultas no schema de exemplo **HR
 
 ```
 .
+├── LICENSE             # Licença MIT
 ├── Fundamentos.sql     # Teoria: tipos de instruções SQL (DML, DDL, DCL, TCL)
 └── HR/
     ├── hr.sql          # Criação e carga do schema HR (tabelas, dados e constraints)
@@ -75,6 +76,12 @@ Exercícios de consulta:
 - [ ] Junções (`JOIN`)
 - [ ] Subconsultas
 - [ ] DML e controle de transações na prática
+
+---
+
+## 📄 Licença
+
+Distribuído sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
 ---
 
