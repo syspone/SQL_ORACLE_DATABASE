@@ -1,7 +1,8 @@
 # Estudos de SQL — Oracle Database
 
 Repositório de estudos de SQL no **Oracle Database**, com scripts comentados em português
-sobre fundamentos da linguagem e prática de consultas no schema de exemplo **HR**.
+sobre fundamentos da linguagem, administração da arquitetura **multitenant** (CDB/PDBs)
+e prática de consultas no schema de exemplo **HR**.
 
 **Autor:** Cristian Matias de Souza
 **Ferramenta:** DataGrip · **Banco:** Oracle Database 23ai Free (compatível com driver Oracle 19+)
@@ -12,11 +13,24 @@ sobre fundamentos da linguagem e prática de consultas no schema de exemplo **HR
 
 ```
 .
-├── LICENSE             # Licença MIT
-├── Fundamentos.sql     # Teoria: tipos de instruções SQL (DML, DDL, DCL, TCL)
-└── HR/
-    ├── hr.sql          # Criação e carga do schema HR (tabelas, dados e constraints)
-    └── Consultas.sql   # Prática de SELECT no schema HR
+├── LICENSE              # Licença MIT
+├── Fundamentos.sql      # Teoria: tipos de instruções SQL (DML, DDL, DCL, TCL)
+├── CDB/
+│   └── criacao_pdbs.sql # Criação e administração dos PDBs (HR, VENDAS, SQLDB1)
+├── HR/
+│   ├── hr.sql           # Criação e carga do schema HR (tabelas, dados e constraints)
+│   ├── usuarios.sql     # Usuário PRODUTOS e verificações de privilégios
+│   └── Consultas.sql    # Prática de SELECT no schema HR
+└── SQLDB1/
+    └── usuarios.sql     # Usuários locais GESTOR (admin) e USR1 (aplicação)
+```
+
+### 🧱 Ambiente multitenant
+
+```
+CDB (FREE) ── CDB$ROOT ─┬─ PDB HR      → usuários HR, PRODUTOS   · 7 tabelas
+                        ├─ PDB SQLDB1  → usuários GESTOR, USR1
+                        └─ PDB VENDAS  → PDB de teste (removido)
 ```
 
 ---
@@ -34,6 +48,23 @@ Resumo teórico das sublinguagens do SQL:
 | **TCL** | Transaction Control Language | `COMMIT`, `ROLLBACK`, `SAVEPOINT`, `SET TRANSACTION` |
 
 Inclui observações específicas do Oracle, como o *COMMIT implícito* após DDL/DCL.
+
+### `CDB/criacao_pdbs.sql`
+Administração do container (conectado como `SYS AS SYSDBA` no `CDB$ROOT`):
+- Conferências do CDB: `v$database`, `max_pdbs`, datafiles
+- *Oracle Managed Files* com `db_create_file_dest`
+- `CREATE PLUGGABLE DATABASE` com `ADMIN USER`, `DEFAULT TABLESPACE` e `STORAGE (MAXSIZE)`
+- `OPEN READ WRITE` e `SAVE STATE` para o PDB abrir junto com o CDB
+- Diagnóstico de PDB em modo `RESTRICTED` via `pdb_plug_in_violations`
+- `ALTER SESSION SET CONTAINER` e views `CDB_*` para enxergar todos os PDBs
+
+### `SQLDB1/usuarios.sql`
+Diferença entre o **administrador do PDB** (`GESTOR`, com `PDB_DBA` + `DBA`) e o
+**usuário de aplicação** (`USR1`, dono do schema com privilégios mínimos de desenvolvimento).
+
+### `HR/usuarios.sql`
+Criação do usuário `PRODUTOS` no PDB HR, consultas de contexto da sessão (`SYS_CONTEXT`),
+privilégios/quotas do usuário e conferência da carga do schema.
 
 ### `HR/hr.sql`
 Script para montar o schema de exemplo **HR** da Oracle do zero:
@@ -58,9 +89,13 @@ Exercícios de consulta:
 ## ▶️ Como usar
 
 1. Tenha um Oracle Database rodando (ex.: [Oracle Database Free](https://www.oracle.com/database/free/) ou via Docker `gvenzl/oracle-free`).
-2. Crie um usuário `HR` no PDB e conecte-se com ele.
-3. Execute `HR/hr.sql` para criar e popular as tabelas.
-4. Execute as consultas de `HR/Consultas.sql` uma a uma para acompanhar os exemplos.
+2. Como `SYS AS SYSDBA`, execute `CDB/criacao_pdbs.sql` para criar os PDBs.
+3. Crie os usuários com `HR/usuarios.sql` e `SQLDB1/usuarios.sql`.
+4. Conectado como `HR` no PDB HR, execute `HR/hr.sql` para criar e popular as tabelas.
+5. Execute as consultas de `HR/Consultas.sql` uma a uma para acompanhar os exemplos.
+
+> **Senhas:** os scripts usam marcadores como `<senha_hr>`. Troque pelas suas senhas
+> localmente e **não** faça commit delas.
 
 > **Dica:** `DESCRIBE` é comando do SQL*Plus e não funciona via JDBC (DataGrip, DBeaver).
 > Use a consulta ao dicionário de dados presente em `Consultas.sql`.
