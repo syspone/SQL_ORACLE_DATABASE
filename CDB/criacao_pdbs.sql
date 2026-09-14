@@ -3,7 +3,7 @@
    Arquivo:  CDB/criacao_pdbs.sql
    Banco: CDB (FREE) — conectado como SYS AS SYSDBA no CDB$ROOT
    Descrição: Arquitetura multitenant — criação e administração
-              dos Pluggable Databases (PDBs) HR, VENDAS e SQLDB1
+              dos Pluggable Databases (PDBs) HR e SQLDB1
    ------------------------------------------------------------
    ATENÇÃO: substitua <senha_...> por senhas reais antes de rodar.
             Nunca versione senhas no Git.
@@ -62,42 +62,7 @@ SELECT con_name, instance_name, state FROM dba_pdb_saved_states;
 
 
 /* ------------------------------------------------------------
-   4) PDB VENDAS — PDB de teste (removido posteriormente)
-   Criado sem DEFAULT TABLESPACE: o PDB nasce só com SYSTEM,
-   SYSAUX, UNDO e TEMP, então a tablespace USERS foi criada
-   manualmente depois.
-   ------------------------------------------------------------ */
-CREATE PLUGGABLE DATABASE vendas
-    ADMIN USER pdbadmin IDENTIFIED BY "<senha_pdbadmin>";
-
-ALTER PLUGGABLE DATABASE vendas OPEN READ WRITE;
-ALTER PLUGGABLE DATABASE vendas SAVE STATE;
-
--- Se abrir em modo RESTRICTED, investigar as violações
-SELECT con_id, name, open_mode, restricted FROM v$pdbs;
-
-SELECT name, cause, type, status, message
-FROM pdb_plug_in_violations
-WHERE name = 'VENDAS';
-
--- Diagnóstico a partir do CDB$ROOT (views CDB_* enxergam todos os PDBs)
-SELECT pdb_name, status, max_size FROM cdb_pdbs;
-SELECT name, con_id, pdb FROM v$services ORDER BY con_id;
-
--- Dentro do PDB: privilégios do admin e tablespaces
-ALTER SESSION SET CONTAINER = vendas;
-
-SELECT granted_role FROM dba_role_privs WHERE grantee = 'PDBADMIN';
-SELECT role, privilege FROM role_sys_privs;
-SELECT tablespace_name, contents FROM dba_tablespaces;
-
-CREATE TABLESPACE users DATAFILE SIZE 100M AUTOEXTEND ON NEXT 10M MAXSIZE 2G;
-
-ALTER SESSION SET CONTAINER = CDB$ROOT;
-
-
-/* ------------------------------------------------------------
-   5) PDB SQLDB1 — já criado com tablespace USERS e limite de 4G
+   4) PDB SQLDB1 — já criado com tablespace USERS e limite de 4G
    Usuários locais em SQLDB1/usuarios.sql
    ------------------------------------------------------------ */
 CREATE PLUGGABLE DATABASE sqldb1
@@ -114,7 +79,7 @@ ALTER PLUGGABLE DATABASE sqldb1 SAVE STATE;
 
 
 /* ------------------------------------------------------------
-   6) Visão geral
+   5) Visão geral
    ------------------------------------------------------------ */
 SELECT con_id, name, open_mode, restricted,
        ROUND(total_size / 1024 / 1024) AS mb

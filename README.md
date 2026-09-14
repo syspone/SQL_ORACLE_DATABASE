@@ -16,7 +16,7 @@ e prática de consultas no schema de exemplo **HR**.
 ├── LICENSE              # Licença MIT
 ├── Fundamentos.sql      # Teoria: tipos de instruções SQL (DML, DDL, DCL, TCL)
 ├── CDB/
-│   └── criacao_pdbs.sql # Criação e administração dos PDBs (HR, VENDAS, SQLDB1)
+│   └── criacao_pdbs.sql # Criação e administração dos PDBs (HR, SQLDB1)
 ├── HR/
 │   ├── hr.sql           # Criação e carga do schema HR (tabelas, dados e constraints)
 │   ├── usuarios.sql     # Usuário PRODUTOS e verificações de privilégios
@@ -29,8 +29,7 @@ e prática de consultas no schema de exemplo **HR**.
 
 ```
 CDB (FREE) ── CDB$ROOT ─┬─ PDB HR      → usuários HR, PRODUTOS   · 7 tabelas
-                        ├─ PDB SQLDB1  → usuários GESTOR, USR1
-                        └─ PDB VENDAS  → PDB de teste (removido)
+                        └─ PDB SQLDB1  → usuários GESTOR, USR1
 ```
 
 ---
@@ -55,7 +54,6 @@ Administração do container (conectado como `SYS AS SYSDBA` no `CDB$ROOT`):
 - *Oracle Managed Files* com `db_create_file_dest`
 - `CREATE PLUGGABLE DATABASE` com `ADMIN USER`, `DEFAULT TABLESPACE` e `STORAGE (MAXSIZE)`
 - `OPEN READ WRITE` e `SAVE STATE` para o PDB abrir junto com o CDB
-- Diagnóstico de PDB em modo `RESTRICTED` via `pdb_plug_in_violations`
 - `ALTER SESSION SET CONTAINER` e views `CDB_*` para enxergar todos os PDBs
 
 ### `SQLDB1/usuarios.sql`
