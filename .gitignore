@@ -1,0 +1,22 @@
+# IDE (DataGrip / JetBrains): configuração local, cache de schema (~43 MB)
+# e dados de conexão (usuários, URLs). Nada disso é necessário para rodar os scripts.
+.idea/
+*.iml
+
+# Arquivos temporários / de sistema
+*.log
+*.tmp
+*.bak
+*~
+.DS_Store
+Thumbs.db
+
+# Exportações de resultados de consulta e dumps
+*.csv
+*.xlsx
+*.dmp
+*.dump
+
+# Variáveis de ambiente / credenciais
+.env
+*.env
